@@ -8,6 +8,7 @@ fi
 ##### Set these values to whatever u want #####
 NEW_USER=user1 
 CLIENT_NAME=client1
+SERVER_NAME=server
 IP_SUBNET=10.10.10.0
 SUBNET_MASK=255.255.255.0
 ########################################
@@ -38,13 +39,17 @@ done
 # Setup openvpn 
 cd /usr/share/easy-rsa
 ./easyrsa init-pki
-./easyrsa build-ca
-./easyrsa build-server-full
-./easyrsa build-client-full $CLIENT_NAME
+./easyrsa build-ca              # /usr/share/easy-rsa/pki/ca.crt
+cd pki
+../easyrsa build-server-full $SERVER_NAME    # /usr/share/easy-rsa/pki/server.crt
+cd ..
+easyrsa build-client-full $CLIENT_NAME   
 ./easyrsa gen-dh
 
 openvpn --genkey tls-auth ta.key
 useradd openvpn 
+
+
 
 
 # Create openssh file
